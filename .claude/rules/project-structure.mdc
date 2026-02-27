@@ -1,0 +1,53 @@
+---
+description: When files need to be located or created.
+alwaysApply: true
+appliesTo:
+  - "**/*"
+---
+
+# Project Structure
+
+## Directory Layout
+```
+src/
+├── main/
+│   ├── java/com/movieticket/
+│   │   ├── config/          # Spring configuration classes
+│   │   ├── controller/      # REST controllers
+│   │   ├── dto/             # Request/Response DTOs
+│   │   ├── exception/       # Custom exceptions and global handler
+│   │   ├── model/           # JPA entities
+│   │   ├── repository/      # Spring Data JPA repositories
+│   │   ├── service/         # Business logic services
+│   │   └── MovieTicketApplication.java
+│   └── resources/
+│       ├── application.yml  # Main configuration
+│       ├── application-dev.yml
+│       ├── application-prod.yml
+│       └── db/migration/    # Flyway migrations
+└── test/
+    └── java/com/movieticket/
+        ├── controller/      # Controller tests (MockMvc)
+        ├── service/         # Service unit tests
+        ├── repository/      # Repository integration tests
+        └── integration/     # End-to-end integration tests
+```
+
+## Naming Conventions
+- **Classes**: PascalCase (`MovieService`, `BookingController`).
+- **Methods/variables**: camelCase (`findById`, `seatCount`).
+- **Constants**: UPPER_SNAKE_CASE (`MAX_SEATS_PER_BOOKING`).
+- **Packages**: lowercase (`com.movieticket.service`).
+- **Database tables**: snake_case (`show_time`, `ticket_booking`).
+
+## Layered Architecture
+- Controllers → Services → Repositories (strict dependency direction).
+- Controllers handle HTTP concerns only (request parsing, response formatting).
+- Services contain business logic and transaction management.
+- Repositories handle data access only.
+- DTOs at API boundary; entities stay within the service/repository layer.
+
+## Core Standards
+- Follow existing patterns when adding new features.
+- Security first — validate all inputs, use parameterized queries.
+- DRY — extract shared logic into service methods or utility classes.

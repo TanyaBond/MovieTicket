@@ -1,0 +1,33 @@
+---
+description: Code quality improvement guidelines for Java / Spring Boot
+alwaysApply: true
+---
+
+# Code Improvement Guidelines
+
+## Core Principles
+- **Boy Scout Rule**: leave code better than you found it.
+- **Single Responsibility**: each class/method does one thing.
+- **DRY**: extract shared logic into reusable methods or services.
+- **Clear Naming**: classes, methods, and variables should be self-documenting.
+- **Extract Constants**: no magic numbers or strings — use `static final` constants.
+
+## Java Improvements
+- Prefer composition over inheritance.
+- Use streams and lambdas where they improve readability, not just brevity.
+- Favor immutable objects (final fields, no setters) where practical.
+- Use `Optional` for nullable return types — never return `null` from public methods.
+- Prefer constructor injection over field injection.
+- Use record types for simple data carriers (Java 16+).
+
+## Spring Boot Improvements
+- Keep controllers thin — delegate business logic to service classes.
+- Use `@Transactional` at the service layer, not the controller layer.
+- Prefer `@Value` or `@ConfigurationProperties` over hardcoded config.
+- Use Spring profiles for environment-specific configuration.
+
+## Performance
+- Use JOINs over N+1 query patterns.
+- Cache expensive operations with `@Cacheable` where appropriate.
+- Use pagination for large result sets.
+- Avoid loading entire entity graphs — use projections or DTOs.

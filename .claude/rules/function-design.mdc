@@ -1,0 +1,51 @@
+---
+description: When writing functions or methods.
+alwaysApply: true
+appliesTo:
+  - "**/*.java"
+---
+
+# Function & Method Design
+
+## Core Principles
+- Single Responsibility: each method does one thing.
+- Command-Query Separation: methods either perform an action OR return data, not both.
+- Limit parameters to 3–4 maximum; use a DTO or builder for more.
+- Avoid deep nesting (max 3–4 levels) — extract helper methods.
+- Return early to reduce complexity (guard clauses).
+
+## Naming Conventions
+- Methods: `verbNoun` (e.g., `findMovieById`, `createBooking`).
+- Boolean methods: `is`, `has`, `can` prefix (e.g., `isAvailable`, `hasSeats`).
+- Collections: plural nouns (e.g., `getActiveShowtimes`).
+
+## Examples
+```java
+// ✅ Early returns for validation
+public Booking createBooking(BookingRequest request) {
+    if (request.getSeatCount() <= 0) {
+        throw new InvalidBookingException("Seat count must be positive");
+    }
+
+    Showtime showtime = showtimeRepository.findById(request.getShowtimeId())
+        .orElseThrow(() -> new ShowtimeNotFoundException(request.getShowtimeId()));
+
+    if (showtime.getAvailableSeats() < request.getSeatCount()) {
+        throw new InsufficientSeatsException(showtime.getId(), request.getSeatCount());
+    }
+
+    return bookingRepository.save(new Booking(showtime, request.getSeatCount()));
+}
+
+// ✅ Short, focused methods
+public boolean isShowtimeSoldOut(Long showtimeId) {
+    return showtimeRepository.findById(showtimeId)
+        .map(s -> s.getAvailableSeats() == 0)
+        .orElse(false);
+}
+```
+
+## Service Methods
+- Service methods should be the transaction boundary (`@Transactional`).
+- Validate inputs at the service layer before processing.
+- Throw domain-specific exceptions, not generic ones.

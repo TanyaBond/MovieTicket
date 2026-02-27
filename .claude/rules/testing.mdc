@@ -1,0 +1,86 @@
+---
+description: When working on tests.
+alwaysApply: true
+appliesTo:
+  - "**/test/**/*.java"
+---
+
+# Testing Standards
+
+## Test Structure
+- **Unit tests**: test individual classes in isolation with mocked dependencies.
+- **Integration tests**: test with real Spring context and database (`@SpringBootTest`).
+- **Controller tests**: use `@WebMvcTest` with `MockMvc` for endpoint testing.
+- **Repository tests**: use `@DataJpaTest` with an embedded/test database.
+
+## Naming & Organization
+- Test class: `ClassNameTest` (e.g., `MovieServiceTest`).
+- Test methods: `shouldDoX_whenY` (e.g., `shouldReturnMovie_whenIdExists`).
+- Mirror the `src/main` package structure in `src/test`.
+
+## Examples
+```java
+// ✅ Service unit test with Mockito
+@ExtendWith(MockitoExtension.class)
+class MovieServiceTest {
+
+    @Mock
+    private MovieRepository movieRepository;
+
+    @InjectMocks
+    private MovieService movieService;
+
+    @Test
+    void shouldReturnMovie_whenIdExists() {
+        // Arrange
+        var movie = new Movie(1L, "Inception", "Sci-Fi");
+        when(movieRepository.findById(1L)).thenReturn(Optional.of(movie));
+
+        // Act
+        var result = movieService.findById(1L);
+
+        // Assert
+        assertThat(result.getTitle()).isEqualTo("Inception");
+        verify(movieRepository).findById(1L);
+    }
+
+    @Test
+    void shouldThrowException_whenMovieNotFound() {
+        when(movieRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> movieService.findById(99L))
+            .isInstanceOf(MovieNotFoundException.class)
+            .hasMessageContaining("99");
+    }
+}
+
+// ✅ Controller test with MockMvc
+@WebMvcTest(MovieController.class)
+class MovieControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private MovieService movieService;
+
+    @Test
+    void shouldReturn200_whenMovieExists() throws Exception {
+        when(movieService.findById(1L)).thenReturn(new MovieResponse(1L, "Inception"));
+
+        mockMvc.perform(get("/api/movies/1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.title").value("Inception"));
+    }
+}
+```
+
+## Best Practices
+- Use **AAA pattern** (Arrange, Act, Assert).
+- Write descriptive test names that explain what is being tested.
+- Test both happy path and error cases for every public method.
+- Test edge cases: null inputs, empty collections, boundary values.
+- Keep tests independent — no shared mutable state between tests.
+- Use `@BeforeEach` for common setup, `@AfterEach` for cleanup.
+- Mock external dependencies — never call real external services in tests.
+- Use AssertJ for fluent, readable assertions.

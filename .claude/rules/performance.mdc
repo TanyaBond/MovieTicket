@@ -1,0 +1,40 @@
+---
+description: Performance optimization patterns for Spring Boot applications.
+alwaysApply: true
+appliesTo:
+  - "**/*.java"
+---
+
+# Performance Optimization
+
+## Database
+- Use JOINs over N+1 query patterns — use `@EntityGraph` or `JOIN FETCH`.
+- Paginate large result sets with `Pageable`.
+- Use database indexes on frequently queried columns.
+- Use projections or DTOs instead of loading full entity graphs.
+- Batch inserts/updates with `saveAll()` instead of iterating `save()`.
+
+## Caching
+```java
+// ✅ Cache frequently accessed, rarely changing data
+@Cacheable("movies")
+public Movie findMovieById(Long id) {
+    return movieRepository.findById(id)
+        .orElseThrow(() -> new MovieNotFoundException(id));
+}
+
+@CacheEvict(value = "movies", key = "#movie.id")
+public Movie updateMovie(Movie movie) {
+    return movieRepository.save(movie);
+}
+```
+
+## Application
+- Avoid blocking I/O in request threads where possible.
+- Use connection pooling (HikariCP — Spring Boot default).
+- Configure appropriate pool sizes for your workload.
+- Use async processing (`@Async`) for non-critical, slow operations.
+
+## General
+- Profile before optimizing — measure, don't guess.
+- Avoid premature optimization; optimize hot paths identified by profiling.

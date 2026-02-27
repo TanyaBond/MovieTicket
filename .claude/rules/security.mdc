@@ -1,0 +1,49 @@
+---
+description: Security standards for Spring Boot applications.
+alwaysApply: true
+appliesTo:
+  - "**/*.java"
+---
+
+# Security Standards
+
+## Authentication & Authorization
+- Use Spring Security for authentication and authorization.
+- Protect all endpoints by default; explicitly permit public ones.
+- Use role-based access control (`@PreAuthorize`, `@Secured`).
+- Store passwords with BCrypt (`PasswordEncoder`).
+
+## Input Validation
+```java
+// ✅ Bean Validation on request DTOs
+public record CreateBookingRequest(
+    @NotNull Long showtimeId,
+    @Min(1) @Max(10) int seatCount,
+    @NotBlank @Email String email
+) {}
+
+// ✅ Validate in controller
+@PostMapping("/bookings")
+public ResponseEntity<BookingResponse> createBooking(@Valid @RequestBody CreateBookingRequest request) {
+    return ResponseEntity.status(201).body(bookingService.createBooking(request));
+}
+```
+
+## Database Security
+- Always use parameterized queries (JPA handles this by default).
+- Never concatenate user input into query strings.
+- Use principle of least privilege for database credentials.
+
+## API Security
+- Use HTTPS in production.
+- Implement CORS configuration explicitly — don't use `allowAll`.
+- For stateless APIs with JWT, disable CSRF but validate tokens properly.
+- Rate-limit sensitive endpoints (login, registration).
+
+## Secrets Management
+- Never hardcode secrets — use environment variables or Spring Vault.
+- Keep secrets out of version control (use `.env` files in `.gitignore`).
+
+## Logging
+- Never log passwords, tokens, or PII.
+- Log authentication events (login, logout, failed attempts).

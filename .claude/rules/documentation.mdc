@@ -1,0 +1,50 @@
+---
+description: When components, classes, methods, or functions are missing documentation comments.
+alwaysApply: false
+appliesTo:
+  - "**/*.java"
+---
+
+# Documentation Standards
+
+## Code Documentation
+- Use Javadoc for public classes and methods.
+- Prefer self-documenting code over excessive comments.
+- Document complex business logic, not obvious code.
+- Public API methods need parameter types, return values, and exception descriptions.
+- Skip Javadoc for simple getters/setters and trivial methods.
+
+## Javadoc Format
+```java
+/**
+ * Calculates the total price for a ticket booking including discounts.
+ *
+ * @param booking the booking containing seat and showtime details
+ * @param discountCode optional discount code to apply
+ * @return the calculated total price
+ * @throws InvalidBookingException if the booking contains invalid data
+ */
+public BigDecimal calculateTotalPrice(Booking booking, String discountCode) {
+    // Implementation
+}
+```
+
+## Inline Comments
+```java
+// ✅ Explain WHY, not WHAT
+// Stripe requires amounts in cents, not dollars
+int amountInCents = price.multiply(BigDecimal.valueOf(100)).intValue();
+
+// Business rule: free cancellation within 24 hours of purchase
+if (Duration.between(purchaseTime, now).toHours() <= 24) {
+    return BigDecimal.ZERO;
+}
+```
+
+## API Documentation
+- Use Swagger/OpenAPI annotations for REST endpoints.
+- Document request/response schemas, status codes, and error formats.
+
+## README
+- Update README when adding features or changing setup steps.
+- Include: project overview, prerequisites, setup instructions, running tests.

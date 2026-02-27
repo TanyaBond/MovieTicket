@@ -1,0 +1,46 @@
+---
+description: When working on error-handling code or observability.
+alwaysApply: true
+appliesTo:
+  - "**/*.java"
+---
+
+# Error Handling & Logging
+
+## Exception Handling
+- Use `@RestControllerAdvice` with `@ExceptionHandler` for centralized error handling.
+- Define custom exception classes for domain-specific errors (e.g., `MovieNotFoundException`).
+- Never catch `Exception` or `Throwable` broadly — catch specific exceptions.
+- Use appropriate HTTP status codes: 400 for bad input, 404 for not found, 409 for conflicts, 500 for server errors.
+
+## Error Response Format
+```java
+// ✅ Consistent error response DTO
+public record ErrorResponse(
+    int status,
+    String message,
+    LocalDateTime timestamp,
+    String path
+) {}
+
+// ✅ Centralized exception handler
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MovieNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMovieNotFound(MovieNotFoundException ex, HttpServletRequest request) {
+        var error = new ErrorResponse(404, ex.getMessage(), LocalDateTime.now(), request.getRequestURI());
+        return ResponseEntity.status(404).body(error);
+    }
+}
+```
+
+## Logging
+- Use SLF4J with Logback (Spring Boot default).
+- Log at appropriate levels: ERROR for failures, WARN for recoverable issues, INFO for key events, DEBUG for diagnostics.
+- Include context in log messages: user ID, request ID, entity IDs.
+- Never log sensitive data (passwords, tokens, PII).
+
+## Validation
+- Use Bean Validation (`@Valid`, `@NotNull`, `@Size`, etc.) on request DTOs.
+- Return `400 Bad Request` with field-level error details for validation failures.

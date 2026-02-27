@@ -1,0 +1,30 @@
+---
+description: Database and JPA/Hibernate standards
+alwaysApply: true
+---
+
+# Database Standards
+
+## JPA / Hibernate
+- Define entities with proper `@Entity`, `@Table`, and `@Column` annotations.
+- Use meaningful table and column names (snake_case in DB, camelCase in Java).
+- Always define `@Id` and generation strategy explicitly.
+- Use `@ManyToOne`, `@OneToMany`, etc. with explicit fetch types — avoid eager loading by default.
+- Prefer `FetchType.LAZY` and load associations explicitly when needed.
+
+## Queries
+- Use Spring Data JPA repository methods where possible.
+- Use `@Query` with JPQL for custom queries.
+- Always use parameterized queries — never concatenate user input into query strings.
+- Implement pagination with `Pageable` for large datasets.
+- Avoid N+1 query patterns — use `JOIN FETCH` or `@EntityGraph`.
+
+## Migrations
+- Use Flyway or Liquibase for schema migrations.
+- Migrations must be forward-only — never edit an existing migration.
+- Name migrations descriptively (e.g., `V2__add_showtime_table.sql`).
+
+## Best Practices
+- Use database constraints (NOT NULL, UNIQUE, FK) — don't rely solely on application-level validation.
+- Index columns used in WHERE clauses and JOINs.
+- Use `@CreatedDate` and `@LastModifiedDate` for audit fields.
