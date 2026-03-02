@@ -3,6 +3,7 @@ package com.movieticket.exception;
 import com.movieticket.dto.ErrorResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,6 +13,18 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(403)
+                .body(new ErrorResponse(403, "Forbidden", "You do not have permission to perform this action. Admin access required."));
+    }
+
+    @ExceptionHandler(MovieNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMovieNotFound(MovieNotFoundException ex) {
+        return ResponseEntity.status(404)
+                .body(new ErrorResponse(404, "Not Found", ex.getMessage()));
+    }
 
     @ExceptionHandler(ShowtimeNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleShowtimeNotFound(ShowtimeNotFoundException ex) {
