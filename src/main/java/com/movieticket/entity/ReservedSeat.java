@@ -25,7 +25,7 @@ public class ReservedSeat {
     @Column(name = "seat_id", nullable = false)
     private String seatId;
 
-    protected ReservedSeat() {
+    public ReservedSeat() {
     }
 
     public ReservedSeat(Reservation reservation, Showtime showtime, String seatId) {

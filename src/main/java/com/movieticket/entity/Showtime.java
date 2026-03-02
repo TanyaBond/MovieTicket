@@ -29,7 +29,7 @@ public class Showtime {
     @OneToMany(mappedBy = "showtime")
     private List<Reservation> reservations = new ArrayList<>();
 
-    protected Showtime() {
+    public Showtime() {
     }
 
     public Showtime(Movie movie, Screen screen, LocalDateTime dateTime) {

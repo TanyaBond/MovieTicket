@@ -24,7 +24,7 @@ public class Screen {
     @OneToMany(mappedBy = "screen")
     private List<Showtime> showtimes = new ArrayList<>();
 
-    protected Screen() {
+    public Screen() {
     }
 
     public Screen(Theater theater, String label) {

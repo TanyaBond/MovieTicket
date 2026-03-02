@@ -28,7 +28,7 @@ public class Reservation {
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReservedSeat> reservedSeats = new ArrayList<>();
 
-    protected Reservation() {
+    public Reservation() {
     }
 
     public Reservation(Showtime showtime) {
@@ -36,7 +36,7 @@ public class Reservation {
     }
 
     @PrePersist
-    protected void onCreate() {
+    public void onCreate() {
         this.confirmationId = UUID.randomUUID();
         this.createdAt = LocalDateTime.now();
     }

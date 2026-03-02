@@ -10,6 +10,7 @@ import com.movieticket.repository.ShowtimeRepository;
 import com.movieticket.util.SeatLayout;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -29,17 +30,21 @@ public class ShowtimeService {
 
     public List<ShowtimeDto> getShowtimesByMovie(UUID movieId) {
         return showtimeRepository.findByMovieId(movieId).stream()
+                .filter(showtime -> showtime.getDateTime().isAfter(LocalDateTime.now()))
                 .map(this::toDto)
                 .toList();
     }
 
     public List<ShowtimeDto> getShowtimesByTheater(UUID theaterId) {
         return showtimeRepository.findByScreenTheaterId(theaterId).stream()
+                .filter(showtime -> showtime.getDateTime().isAfter(LocalDateTime.now()))
                 .map(this::toDto)
                 .toList();
     }
 
     public AvailableSeatsResponse getAvailableSeats(UUID showtimeId) {
+        showtimeRepository.findById(showtimeId)
+                .orElseThrow(() -> new ShowtimeNotFoundException(showtimeId));
 
         Set<String> takenSeats = reservedSeatRepository.findByShowtimeId(showtimeId).stream()
                 .map(ReservedSeat::getSeatId)

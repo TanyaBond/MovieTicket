@@ -7,7 +7,7 @@ alwaysApply: true
 
 ## JPA / Hibernate
 - Define entities with proper `@Entity`, `@Table`, and `@Column` annotations.
-- Use meaningful table and column names (snake_case in DB, camelCase in Java).
+- Use meaningful table and column nudeames (snake_case in DB, camelCase in Java).
 - Always define `@Id` and generation strategy explicitly.
 - Use `@ManyToOne`, `@OneToMany`, etc. with explicit fetch types — avoid eager loading by default.
 - Prefer `FetchType.LAZY` and load associations explicitly when needed.

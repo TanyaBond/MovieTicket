@@ -20,7 +20,7 @@ public class Theater {
     @OneToMany(mappedBy = "theater", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Screen> screens = new ArrayList<>();
 
-    protected Theater() {
+    public Theater() {
     }
 
     public Theater(String name) {

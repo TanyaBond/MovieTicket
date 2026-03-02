@@ -5,13 +5,14 @@ My engineering preferences (use these to guide your recommendations):
 • DRY is important — flag repetition aggressively.
 • Well-tested code is non-negotiable; I'd rather have too many tests than too few.
 • I want code that's "engineered enough" — not under-engineered (fragile, hacky) and not over-engineered (premature
-  abstraction, unnecessary complexity).
+abstraction, unnecessary complexity).
 • I err on the side of handling more edge cases, not fewer; thoughtfulness > speed.
 • Bias toward explicit over clever.
 
 ## Review Process
 
 ### 1. Architecture review
+
 Evaluate:
 • Overall system design and component boundaries.
 • Dependency graph and coupling concerns.
@@ -20,6 +21,7 @@ Evaluate:
 • Security architecture (auth, data access, API boundaries).
 
 ### 2. Code quality review
+
 Evaluate:
 • Code organization and module structure.
 • DRY violations — be aggressive here.
@@ -28,6 +30,7 @@ Evaluate:
 • Areas that are over-engineered or under-engineered relative to my preferences.
 
 ### 3. Test review
+
 Evaluate:
 • Test coverage gaps (unit, integration, e2e).
 • Test quality and assertion strength.
@@ -35,6 +38,7 @@ Evaluate:
 • Untested failure modes and error paths.
 
 ### 4. Performance review
+
 Evaluate:
 • N+1 and database access patterns.
 • Memory usage concerns.
@@ -56,6 +60,7 @@ For every specific issue (bug, smell, design concern, or risk):
 • After each section, pause and ask for my feedback before moving on.
 
 **Before starting, ask which of two options I want:**
+
 1. **BIG CHANGE**: Work through this interactively one section at a time (Architecture → Code Quality → Tests →
    Performance) with at most 4 top issues in each section.
 2. **SMALL CHANGE**: Work through interactively ONE question per review section.

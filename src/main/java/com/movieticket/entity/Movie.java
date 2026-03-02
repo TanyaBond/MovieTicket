@@ -20,7 +20,7 @@ public class Movie {
     @OneToMany(mappedBy = "movie")
     private List<Showtime> showtimes = new ArrayList<>();
 
-    protected Movie() {
+    public Movie() {
     }
 
     public Movie(String title) {
