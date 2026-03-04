@@ -8,14 +8,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity 
 @EnableMethodSecurity
 public class SecurityConfig {
-
+    // it is currently mock for existed system without real tokens 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())  // Отключаем CSRF для упрощения
+            .csrf(csrf -> csrf.disable())  
             .authorizeHttpRequests(authz -> authz.anyRequest().permitAll());
         return http.build();
     }
